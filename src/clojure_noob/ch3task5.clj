@@ -1,4 +1,4 @@
-(def asym-hobbit-body-parts [{:name "head" :size 3}
+(def asym-alien-body-parts [{:name "head" :size 3}
                              {:name "left-eye" :size 1}
                              {:name "left-ear" :size 1}
                              {:name "mouth" :size 1}
@@ -16,76 +16,32 @@
                              {:name "left-thigh" :size 4}
                              {:name "left-lower-leg" :size 3}
                              {:name "left-achilles" :size 1}
-                             {:name "left-foot" :size 2}]
-  )
-(defn matching-part
-  "Changes value of :name left to right"
-  [part]
-  {:name (clojure.string/replace (:name part "no name") #"^left-" "right-")
-   :size (:size part)}
-  )
-(matching-part {:name "left-eye"})
-
-(defn symmetrise-body-parts
-  "Expects a sequence of maps that have :name :size"
-  [body-parts]
-  (loop [remaining-asym-parts body-parts
-         final-body-parts []]
-    (if (empty? remaining-asym-parts)
-      final-body-parts
-      (let [[part & remaining] remaining-asym-parts]
-        (recur remaining
-               (into final-body-parts
-                     (set [part (matching-part part)]))))))
-  )
-(symmetrise-body-parts asym-hobbit-body-parts)
-
-
-
-
-
-(defn better-symmetrize-body-parts
-  "Expects a seq of maps that have a :name and :size"
-  [asym-body-parts]
-  (reduce (fn [final-body-parts part]
-            (into final-body-parts (set [part (matching-part part)])))
-          []
-          asym-body-parts))
-(better-symmetrize-body-parts asym-hobbit-body-parts)
-
-
+                             {:name "left-foot" :size 2}])
 
 (defn radial-matching-part
-  [part]
-  (loop [five-of-part []
-         number 1]
-    (if (= number 5)
-      five-of-part
-      (do
-        (into five-of-part {:name (clojure.string/replace (:name part) #"^left-" (str "#" number " "))
-                            :size (:size part)})
-        (recur five-of-part (inc number))))))
-(radial-matching-part {:name "left-fadsf"
-                       :size 1
-                       })
+  ([part]
+   (if (= (:name part)(clojure.string/replace (:name part) #"^left-" (str 1 "_")))
+     (do (println "no need for" (:name part))
+         [part])
+     (radial-matching-part part 1)))
 
+  ([part iteration-num]
+   (let [new-part
+         {:name (clojure.string/replace
+                 (:name part)
+                 #"^left-"
+                 (str iteration-num "_"))
+          :size (:size part)}]
+     (if (= iteration-num 5)
+       [new-part]
+       (into [new-part]
+             (radial-matching-part part (inc iteration-num)))))))
 
-
-
-
-(defn symmetrize-alien-body-parts
-  "Given only type of body parts in form of sequence of maps returns seq of maps with 5 body parts. Everything what is left- considered to have 5 separate parts"
+(defn symmetrize-alien
   [body-parts]
-  (loop [remaining-parts body-parts
-         final-body []]
-    (if (empty? remaining-parts)
-      final-body
-      (let [[part & remains] body-parts]
-        (recur remains
-               (into final-body (radial-matching-part part)))
-        )
-      )
-    )
-  )
+  (reduce (fn [result part]
+            (into result (radial-matching-part part))
+            []
+            body-parts) body-parts))
 
-  (symmetrize-alien-body-parts  asym-hobbit-body-parts)
+(symmetrize-alien asym-alien-body-parts 2)
