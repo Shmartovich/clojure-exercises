@@ -40,8 +40,8 @@
 (defn symmetrize-alien
   [body-parts]
   (reduce (fn [result part]
-            (into result (radial-matching-part part))
-            []
-            body-parts) body-parts))
+            (into result (radial-matching-part part)))
+          []
+          body-parts))
 
-(symmetrize-alien asym-alien-body-parts 2)
+(symmetrize-alien asym-alien-body-parts)
