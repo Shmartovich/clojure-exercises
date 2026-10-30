@@ -83,3 +83,40 @@
                                (conj res (str (get map-entry :name) "," (get map-entry :glitter-index))))
                              []
                              list-of-maps)))
+
+
+;;ch5 test
+(defn sum
+  ([vals]
+   (sum vals 0))
+  ([vals init-sum-value]
+   (if (empty? vals)
+     init-sum-value
+     (recur (rest vals) (+ (first vals) init-sum-value)))))
+
+(sum [53] 12)
+
+(def character
+  {:name "Smooches McCutes"
+   :attributes {:intelligence 10
+                :strength 4
+                :dexterity 5}})
+(def c-int (comp :intelligence :attributes))
+(def c-str (comp :strength :attributes))
+(def c-dex (comp :dexterity :attributes))
+
+(c-int character)
+
+(defn two-comp
+  [f g]
+  (fn [& args]
+    (f (apply g args))))
+
+((two-comp #(inc %) #(* %1 %2)) 10 5)
+
+(defn n-comp
+  [& rest-functions]
+  (fn [& args]
+    (apply (first rest-functions) args)
+    ))
+((-comp inc inc)
