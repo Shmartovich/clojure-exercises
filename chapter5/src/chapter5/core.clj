@@ -91,3 +91,29 @@
   )
 (def c-int2 (attr :intelligence))
 (c-int2 character)
+
+;; Task 2
+;; Implement the comp function.
+
+(defn my-comp
+  [& fns]
+  (fn [& args]
+    (if (= 1 (count fns))
+      (apply (first fns) args)
+      ((apply my-comp (drop-last fns)) (apply (last fns) args)))
+    )
+)
+
+(def negative-quotient (my-comp - /))
+;; #'user/negative-quotient
+
+(negative-quotient 8 3)  ;;=> -8/3
+
+(def concat-and-reverse (my-comp (partial apply str) reverse str))
+;; #'user/concat-and-reverse
+
+(concat-and-reverse "hello" "clojuredocs")
+;;=> "scoderujolcolleh"
+((my-comp str +) 8 8 8)
+
+((comp inc) 5)
