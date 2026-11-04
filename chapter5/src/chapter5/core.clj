@@ -103,7 +103,7 @@
     )
   )
 
-;; Implement the comp function with loop n recur
+;; Implementation of the comp function with loop n recur
 
 (defn my-comp [& fns]
   (fn [& args]
@@ -123,3 +123,11 @@
 (concat-and-reverse "hello" "clojuredocs")
 
 ((my-comp str +) 8 8 8)
+
+;; Task 3
+(defn my
+  "Implement the assoc-in function. Hint: use the assoc function and define its parameters as [m [k & ks] v]."
+
+
+
+  )
