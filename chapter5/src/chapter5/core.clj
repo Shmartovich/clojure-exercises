@@ -94,26 +94,32 @@
 
 ;; Task 2
 ;; Implement the comp function.
-
-(defn my-comp
-  [& fns]
+#_(defn my-comp [& fns]
   (fn [& args]
     (if (= 1 (count fns))
       (apply (first fns) args)
-      ((apply my-comp (drop-last fns)) (apply (last fns) args)))
+      ((apply my-comp (drop-last fns)) (apply (last fns) args))
+      )
     )
-)
+  )
 
+;; Implement the comp function with loop n recur
+
+(defn my-comp [& fns]
+  (fn [& args]
+    (loop [rest-fns fns
+           new-args args]
+      (if (empty? (rest rest-fns))
+        (apply (first rest-fns) new-args)
+        (recur (drop-last rest-fns) (list (apply (last rest-fns) new-args)))
+        ))
+    ))
+
+;; Testing task 2
 (def negative-quotient (my-comp - /))
-;; #'user/negative-quotient
-
 (negative-quotient 8 3)  ;;=> -8/3
 
 (def concat-and-reverse (my-comp (partial apply str) reverse str))
-;; #'user/concat-and-reverse
-
 (concat-and-reverse "hello" "clojuredocs")
-;;=> "scoderujolcolleh"
-((my-comp str +) 8 8 8)
 
-((comp inc) 5)
+((my-comp str +) 8 8 8)
