@@ -125,9 +125,82 @@
 ((my-comp str +) 8 8 8)
 
 ;; Task 3
-(defn my
-  "Implement the assoc-in function. Hint: use the assoc function and define its parameters as [m [k & ks] v]."
+(defn my-assoc-in [m ks v]
+  "Implement the assoc-in function. Hint: use the assoc function and define its parameters as [m [k & ks] v].
+  assoc-in: Associates a value in a nested associative structure, where ks is a
+  sequence of keys and v is the new value and returns a new nested structure.
+  If any levels do not exist, hash-maps will be created.  "
+  (println "--- task3 ---")
+  (println m)
 
+  ;;(assoc ((first (rest ks))((first ks) m)) (last ks) v)
+                                        ; (print ((first ks) m))
+  (let [key1-val ((first ks) m)]
+    (println key1-val)
+    (println (:key2 key1-val))
+    (println (assoc {} (first ks) (assoc {} :key2 (assoc (:key2 key1-val) (last ks) v)))))
 
+  ;;(assoc {} (first ks) (assoc {} :key2 (assoc (:key2 key1-val) (last ks) v)))
 
   )
+
+(defn rec [m ks v]
+  (loop [ks (reverse ks)
+         res v]
+    (if (empty? ks)
+      res
+      (do (println (first ks))
+        (recur (rest ks)
+               (assoc {} (first ks) res)))
+      )
+    )
+  )
+
+;; Testing task 3
+
+(def first-map-easy {:key1 123})
+(def first-map-middle {:key1 {:key2 123}})
+(def first-map-hard {:key1 {:key2 {:key3 123}}})
+
+;;(my-assoc-in first-map-easy [:key1] 321)
+;;(my-assoc-in first-map-middle [:key1 :key2] 321)
+;;(my-assoc-in first-map-hard [:key1 :key2 :key3] 321)
+
+(rec first-map-easy [:key1] 321)
+(rec first-map-middle [:key1 :key2] 321)
+(rec first-map-hard [:key1 :key2 :key3] 321)
+
+
+
+
+  (def users [{:name "James" :age 26}  {:name "John" :age 43}])
+
+  ;; ;; update the age of the second (index 1) user
+  ;; (my-assoc-in users [1 :age] 44)
+  ;; ;;=> [{:name "James", :age 26} {:name "John", :age 44}]
+
+  ;; ;; insert the password of the second (index 1) user
+  ;; (my-assoc-in users [1 :password] "nhoJ")
+  ;; ;;=> [{:name "James", :age 26} {:password "nhoJ", :name "John", :age 43}]
+
+  ;; ;; create a third (index 2) user
+  ;; ;; Also (assoc m 2 {...}) or (conj m {...})
+  ;; (my-assoc-in users [2] {:name "Jack" :age 19})
+  ;; ;;=> [{:name "James", :age 26} {:name "John", :age 43} {:name "Jack", :age 19}]
+
+  ;; (my-assoc-in {} [:cookie :monster :vocals] "Finntroll")
+  ;;                                       ; => {:cookie {:monster {:vocals "Finntroll"}}}
+
+  ;; Task 4
+  ;; use the update-in function
+
+  (def test-map {:cookie {:monster {:vocals "Finntroll"}}})
+  (update-in test-map [:cookie :monster :vocals] str "-oll-oll")
+
+  ;; Task 5
+  ;; Implement update-in
+
+
+  (defn my-update-in [ m ks f & args]
+
+    )
